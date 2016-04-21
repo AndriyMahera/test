@@ -101,10 +101,6 @@ class WeatherTableViewController: UITableViewController {
                     weatherForAllDays.append(WeatherStructure(weatherDictionary: data[index] as! [String : AnyObject],current: false))
                 }
             }
-            else
-            {
-                
-            }
         }
         return weatherForAllDays
     }

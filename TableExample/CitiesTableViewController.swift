@@ -26,9 +26,6 @@ class  CitiesTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(self.CityTableViewCellIdentifier, forIndexPath: indexPath)
-        if indexPath.row == 0 {
-            
-        }
         cell.textLabel?.text = self.cities[indexPath.row]
         
         return cell
