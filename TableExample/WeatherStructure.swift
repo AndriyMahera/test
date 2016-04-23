@@ -39,7 +39,7 @@ struct WeatherStructure
         let floatProbability=weatherDictionary["precipProbability"] as! Double
         precipProbability=Int(floatProbability*100)
         summary=weatherDictionary["summary"] as! String
-        pressure=Int(weatherDictionary["pressure"] as! Double /** 0.75*/)
+        pressure=Int(weatherDictionary["pressure"] as! Double * 0.725)
         windSpeed=weatherDictionary["windSpeed"] as! Int
         icon=weatherDictionary["icon"] as! String
     }

@@ -46,9 +46,9 @@ class WeatherTableViewController: UITableViewController {
             
             cell1.temperatureLabel.text="\(weatherForAllDays[indexPath.row].temperature)ºC"
             cell1.humidityLabel.text="\(weatherForAllDays[indexPath.row].humidity)%"
-            cell1.pressureLabel.text="\(weatherForAllDays[indexPath.row].pressure)"
+            cell1.pressureLabel.text="\(weatherForAllDays[indexPath.row].pressure) mmHg"
             cell1.summaryLabel.text="\(weatherForAllDays[indexPath.row].summary)"
-            cell1.windLabel.text="\(weatherForAllDays[indexPath.row].windSpeed)m/s"
+            cell1.windLabel.text="\(weatherForAllDays[indexPath.row].windSpeed) m/s"
             cell1.icon.image=UIImage(named: getIconName(weatherForAllDays[indexPath.row].icon))
         }
         else
