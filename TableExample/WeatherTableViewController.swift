@@ -7,8 +7,7 @@ class WeatherTableViewController: UITableViewController {
     
     
     let apiKey="4e39340c48a7b3a9307503a14a16e14e"
-    
-    let googleApi="AIzaSyCF7jutlRgbwI2A1vq1UWsoM2nnUTFyOrw"
+    let googleApiKey="AIzaSyC07iqLskaXEGnbXN1Oc04goTmnBhKOlck"
     
     let LabelCell="CustomCell1"
     let LabelCell2="CustomCell2"
@@ -16,15 +15,17 @@ class WeatherTableViewController: UITableViewController {
     var weatherForAllDays=[WeatherStructure]()
     var coords:String!
     let calendar = NSCalendar.currentCalendar()
+    let baseURLGoogle=NSURL(string:"https://maps.googleapis.com/maps/api/geocode/json?")
 
     override func viewDidLoad()
     {
-        super.viewDidLoad()        
+        super.viewDidLoad()
         let baseURL = NSURL(string: "https://api.forecast.io/forecast/\(apiKey)/")
-        let forecastURL = NSURL(string: coords, relativeToURL: baseURL)
+        let forecastURL = NSURL(string:getLatLngForZip(cityName), relativeToURL: baseURL)
         let weatherData = NSData(contentsOfURL: forecastURL!)
         let json=convertToJSON(weatherData!)
         weatherForAllDays=fillWeatherData(json!)
+        print(json)
     }
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int
     {
@@ -52,7 +53,7 @@ class WeatherTableViewController: UITableViewController {
             cell1.pressureLabel.text="\(weatherForAllDays[indexPath.row].pressure) mmHg"
             cell1.summaryLabel.text="\(weatherForAllDays[indexPath.row].summary)"
             cell1.windLabel.text="\(weatherForAllDays[indexPath.row].windSpeed) m/s"
-            cell1.icon.image=UIImage(named: getIconName(weatherForAllDays[indexPath.row].icon))
+            cell1.icon.image=UIImage(named: weatherForAllDays[indexPath.row].icon)
         }
         else
         {
@@ -68,7 +69,7 @@ class WeatherTableViewController: UITableViewController {
             cell2.minTempLabel.text="\(weatherForAllDays[indexPath.row].minTemperature)ºC"
             cell2.humidityLabel.text="\(weatherForAllDays[indexPath.row].humidity)%"
             cell2.windLabel.text="\(weatherForAllDays[indexPath.row].windSpeed)m/s"
-            cell2.icon.image=UIImage(named: getIconName(weatherForAllDays[indexPath.row].icon))
+            cell2.icon.image=UIImage(named: weatherForAllDays[indexPath.row].icon)
         }
         return cell
     }
@@ -132,22 +133,24 @@ class WeatherTableViewController: UITableViewController {
         default:return "You're such an idiot"
         }
     }
-    func forwardGeocoding(address: String){
-        CLGeocoder().geocodeAddressString(address, completionHandler: { (placemarks, error) in
-            if error != nil {
-                print(error)
-                return
+    func getLatLngForZip(zipCode: String)->String {
+        let URLString = "\(self.baseURLGoogle?.absoluteString ?? "")address=\(zipCode.stringByReplacingOccurrencesOfString(" ", withString: "+"))&key=\(self.googleApiKey)"
+        print(URLString)
+        let url = NSURL(string: URLString)
+        let data = NSData(contentsOfURL: url!)
+        let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
+        print(json)
+        if let result = json["results"] as? NSArray {
+            if let geometry = result[0]["geometry"] as? NSDictionary {
+                if let location = geometry["location"] as? NSDictionary {
+                    let latitude = location["lat"] as! Float
+                    let longitude = location["lng"] as! Float
+                    return "\(latitude),\(longitude)"
+                }
             }
-            if placemarks?.count > 0 {
-                let placemark = placemarks?[0]
-                let location = placemark?.location
-                let coordinate = location?.coordinate
-                print("\nlat: \(coordinate!.latitude), long: \(coordinate!.longitude)")
-            }
-        })
+        }
+        return ""
     }
-    
-    
 }
 
 

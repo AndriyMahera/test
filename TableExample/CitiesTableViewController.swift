@@ -6,7 +6,7 @@ class  CitiesTableViewController: UITableViewController {
     let ForecastDetailSegueIdentifier = "ForecastDetailSegueIdentifier"
     let CityTableViewCellIdentifier = "CityTableViewCellIdentifier"
     
-    let cities = ["Lviv", "Manchester", "New York","Vellington"]
+    let cities = ["Lviv", "Manchester", "New York","Wellington"]
     let latitude_longitude=["49.839683,24.029717","53.480759,-2.242631","40.712784,-74.005941","-41.286460,174.776236"]
     
     override func viewDidLoad()
