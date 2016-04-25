@@ -1,11 +1,15 @@
 
 import UIKit
+import CoreLocation
+import AddressBookUI
 
 class WeatherTableViewController: UITableViewController {
     
-
     
     let apiKey="4e39340c48a7b3a9307503a14a16e14e"
+    
+    let googleApi="AIzaSyCF7jutlRgbwI2A1vq1UWsoM2nnUTFyOrw"
+    
     let LabelCell="CustomCell1"
     let LabelCell2="CustomCell2"
     var cityName:String!
@@ -43,7 +47,6 @@ class WeatherTableViewController: UITableViewController {
             
             let components = calendar.components(.Weekday, fromDate: NSDate())
             cell1.dayOfWeekLabel.text=nameOfDay(components.weekday)
-            
             cell1.temperatureLabel.text="\(weatherForAllDays[indexPath.row].temperature)ºC"
             cell1.humidityLabel.text="\(weatherForAllDays[indexPath.row].humidity)%"
             cell1.pressureLabel.text="\(weatherForAllDays[indexPath.row].pressure) mmHg"
@@ -129,5 +132,22 @@ class WeatherTableViewController: UITableViewController {
         default:return "You're such an idiot"
         }
     }
+    func forwardGeocoding(address: String){
+        CLGeocoder().geocodeAddressString(address, completionHandler: { (placemarks, error) in
+            if error != nil {
+                print(error)
+                return
+            }
+            if placemarks?.count > 0 {
+                let placemark = placemarks?[0]
+                let location = placemark?.location
+                let coordinate = location?.coordinate
+                print("\nlat: \(coordinate!.latitude), long: \(coordinate!.longitude)")
+            }
+        })
+    }
+    
     
 }
+
+

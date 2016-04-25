@@ -92,12 +92,6 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="wind" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qco-pa-faf">
-                                            <rect key="frame" x="253" y="99" width="94" height="31"/>
-                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="pressure" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jDM-fr-mJi">
                                             <rect key="frame" x="253" y="138" width="94" height="28"/>
                                             <constraints>
@@ -162,6 +156,12 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="wind" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qco-pa-faf">
+                                            <rect key="frame" x="253" y="99" width="94" height="31"/>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="jDM-fr-mJi" firstAttribute="top" secondItem="qco-pa-faf" secondAttribute="bottom" constant="8" symbolic="YES" id="1I7-cT-N3Q"/>
@@ -171,7 +171,7 @@
                                         <constraint firstItem="wxN-tr-BuA" firstAttribute="top" secondItem="jDM-fr-mJi" secondAttribute="bottom" constant="8" id="2Ke-B9-cGd"/>
                                         <constraint firstAttribute="bottom" secondItem="jDM-fr-mJi" secondAttribute="bottom" constant="83" id="2vp-iN-jo4"/>
                                         <constraint firstItem="jDM-fr-mJi" firstAttribute="trailing" secondItem="qco-pa-faf" secondAttribute="trailing" id="6Co-QW-0Lf">
-                                            <variation key="heightClass=regular-widthClass=compact" constant="59"/>
+                                            <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                                         </constraint>
                                         <constraint firstItem="Hap-Zv-oqr" firstAttribute="centerY" secondItem="Iti-it-h3D" secondAttribute="centerY" id="6c0-6w-xaw"/>
                                         <constraint firstItem="jDM-fr-mJi" firstAttribute="top" secondItem="qco-pa-faf" secondAttribute="bottom" constant="8" id="6qT-HP-C32"/>
@@ -188,7 +188,7 @@
                                         </constraint>
                                         <constraint firstItem="qco-pa-faf" firstAttribute="top" secondItem="zA5-1h-G1e" secondAttribute="bottom" constant="8" id="Jsd-L0-RJd"/>
                                         <constraint firstItem="qco-pa-faf" firstAttribute="centerX" secondItem="Iti-it-h3D" secondAttribute="centerX" id="PaZ-Ws-fUR">
-                                            <variation key="heightClass=regular-widthClass=compact" constant="-23.5"/>
+                                            <variation key="heightClass=regular-widthClass=compact" constant="6"/>
                                         </constraint>
                                         <constraint firstAttribute="bottomMargin" secondItem="wxN-tr-BuA" secondAttribute="bottom" constant="39" id="RUU-0N-wus">
                                             <variation key="heightClass=regular-widthClass=compact" constant="50"/>
