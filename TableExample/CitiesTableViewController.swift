@@ -5,9 +5,11 @@ class  CitiesTableViewController: UITableViewController {
    
     let ForecastDetailSegueIdentifier = "ForecastDetailSegueIdentifier"
     let CityTableViewCellIdentifier = "CityTableViewCellIdentifier"
+    let baseURLGoogle=NSURL(string:"https://maps.googleapis.com/maps/api/geocode/json?")
+    let googleApiKey="AIzaSyC07iqLskaXEGnbXN1Oc04goTmnBhKOlck"
     
     let cities = ["Lviv", "Manchester", "New York","Wellington"]
-    let latitude_longitude=["49.839683,24.029717","53.480759,-2.242631","40.712784,-74.005941","-41.286460,174.776236"]
+
     
     override func viewDidLoad()
     {
@@ -40,9 +42,28 @@ class  CitiesTableViewController: UITableViewController {
             indexPath = sender as? NSIndexPath
         {
             controller.cityName = cities[indexPath.row]
-            controller.coords=latitude_longitude[indexPath.row]
+            controller.coords=getLatLngForZip(cities[indexPath.row])
         }
     }
+    func getLatLngForZip(zipCode: String)->String {
+        let URLString = "\(self.baseURLGoogle?.absoluteString ?? "")address=\(zipCode.stringByReplacingOccurrencesOfString(" ", withString: "+"))&key=\(self.googleApiKey)"
+        print(URLString)
+        let url = NSURL(string: URLString)
+        let data = NSData(contentsOfURL: url!)
+        let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
+        print(json)
+        if let result = json["results"] as? NSArray {
+            if let geometry = result[0]["geometry"] as? NSDictionary {
+                if let location = geometry["location"] as? NSDictionary {
+                    let latitude = location["lat"] as! Float
+                    let longitude = location["lng"] as! Float
+                    return "\(latitude),\(longitude)"
+                }
+            }
+        }
+        return ""
+    }
+
     
     
 }

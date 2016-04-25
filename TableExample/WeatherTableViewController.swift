@@ -7,21 +7,18 @@ class WeatherTableViewController: UITableViewController {
     
     
     let apiKey="4e39340c48a7b3a9307503a14a16e14e"
-    let googleApiKey="AIzaSyC07iqLskaXEGnbXN1Oc04goTmnBhKOlck"
-    
     let LabelCell="CustomCell1"
     let LabelCell2="CustomCell2"
     var cityName:String!
     var weatherForAllDays=[WeatherStructure]()
     var coords:String!
     let calendar = NSCalendar.currentCalendar()
-    let baseURLGoogle=NSURL(string:"https://maps.googleapis.com/maps/api/geocode/json?")
 
     override func viewDidLoad()
     {
         super.viewDidLoad()
         let baseURL = NSURL(string: "https://api.forecast.io/forecast/\(apiKey)/")
-        let forecastURL = NSURL(string:getLatLngForZip(cityName), relativeToURL: baseURL)
+        let forecastURL = NSURL(string:coords, relativeToURL: baseURL)
         let weatherData = NSData(contentsOfURL: forecastURL!)
         let json=convertToJSON(weatherData!)
         weatherForAllDays=fillWeatherData(json!)
@@ -120,36 +117,6 @@ class WeatherTableViewController: UITableViewController {
         case 7:return "Saturday"
         default:return "You're such an idiot!"
         }
-    }
-    func getIconName(ic : String)->String
-    {
-        switch ic {
-        case "partly-cloudy-day","cloudy","partly-cloudy-night":return "Cloudiness"
-        case "clear-day","clear-night":return "Sun"
-        case "fog":return "Fog"
-        case "snow","sleet":return "Snow"
-        case "rain":return "Rain"
-        case "wind":return "Thunderstorm"
-        default:return "You're such an idiot"
-        }
-    }
-    func getLatLngForZip(zipCode: String)->String {
-        let URLString = "\(self.baseURLGoogle?.absoluteString ?? "")address=\(zipCode.stringByReplacingOccurrencesOfString(" ", withString: "+"))&key=\(self.googleApiKey)"
-        print(URLString)
-        let url = NSURL(string: URLString)
-        let data = NSData(contentsOfURL: url!)
-        let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
-        print(json)
-        if let result = json["results"] as? NSArray {
-            if let geometry = result[0]["geometry"] as? NSDictionary {
-                if let location = geometry["location"] as? NSDictionary {
-                    let latitude = location["lat"] as! Float
-                    let longitude = location["lng"] as! Float
-                    return "\(latitude),\(longitude)"
-                }
-            }
-        }
-        return ""
     }
 }
 
