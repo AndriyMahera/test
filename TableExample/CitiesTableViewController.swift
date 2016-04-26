@@ -8,12 +8,13 @@ class  CitiesTableViewController: UITableViewController {
     let baseURLGoogle=NSURL(string:"https://maps.googleapis.com/maps/api/geocode/json?")
     let googleApiKey="AIzaSyC07iqLskaXEGnbXN1Oc04goTmnBhKOlck"
     
-    let cities = ["Lviv", "Manchester", "New York","Wellington"]
+    var cities = ["Lviv", "Manchester", "New York","Wellington"]
 
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        navigationItem.leftBarButtonItem = editButtonItem()
         self.tableView.tableFooterView = UIView()
     }
     
@@ -45,13 +46,25 @@ class  CitiesTableViewController: UITableViewController {
             controller.coords=getLatLngForZip(cities[indexPath.row])
         }
     }
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            cities.removeAtIndex(indexPath.row)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            
+        }
+        else if editingStyle == .Insert {
+
+        }
+        
+    }
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
     func getLatLngForZip(zipCode: String)->String {
         let URLString = "\(self.baseURLGoogle?.absoluteString ?? "")address=\(zipCode.stringByReplacingOccurrencesOfString(" ", withString: "+"))&key=\(self.googleApiKey)"
-        print(URLString)
         let url = NSURL(string: URLString)
         let data = NSData(contentsOfURL: url!)
         let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
-        print(json)
         if let result = json["results"] as? NSArray {
             if let geometry = result[0]["geometry"] as? NSDictionary {
                 if let location = geometry["location"] as? NSDictionary {
@@ -64,6 +77,8 @@ class  CitiesTableViewController: UITableViewController {
         return ""
     }
 
+    @IBAction func addClick(sender: UIButton) {
+    }
     
     
 }

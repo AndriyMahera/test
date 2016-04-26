@@ -22,7 +22,6 @@ class WeatherTableViewController: UITableViewController {
         let weatherData = NSData(contentsOfURL: forecastURL!)
         let json=convertToJSON(weatherData!)
         weatherForAllDays=fillWeatherData(json!)
-        print(json)
     }
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int
     {
@@ -118,6 +117,7 @@ class WeatherTableViewController: UITableViewController {
         default:return "You're such an idiot!"
         }
     }
+
 }
 
 

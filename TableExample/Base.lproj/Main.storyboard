@@ -31,9 +31,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="3Mv-SB-8eL">
+                            <rect key="frame" x="0.0" y="64" width="600" height="53"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="CityTableViewCellIdentifier" textLabel="6AJ-3x-4gX" style="IBUITableViewCellStyleDefault" id="Kqf-GG-0e3">
-                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="145" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="right" tableViewCell="Kqf-GG-0e3" id="TI8-Pa-eUu">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -56,7 +61,18 @@
                             <outlet property="delegate" destination="0ma-v9-akh" id="vnI-98-fCn"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="i8t-Jf-2Pt"/>
+                    <navigationItem key="navigationItem" id="i8t-Jf-2Pt">
+                        <barButtonItem key="rightBarButtonItem" id="hfa-pB-fxu">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="JVw-Ca-YrU">
+                                <rect key="frame" x="491" y="7" width="89" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Add new city"/>
+                                <connections>
+                                    <action selector="addClick:" destination="0ma-v9-akh" eventType="touchUpInside" id="3W0-km-AVr"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="T2Q-Qe-5PI" kind="show" identifier="ForecastDetailSegueIdentifier" id="LUq-J8-stx"/>
                     </connections>
@@ -383,14 +399,14 @@
                                             <exclude reference="uyi-3u-SVo"/>
                                             <exclude reference="x64-7o-dCI"/>
                                             <exclude reference="pHt-Sx-ioo"/>
-                                            <exclude reference="2ah-tu-lqY"/>
-                                            <exclude reference="9Nk-wf-JxJ"/>
-                                            <exclude reference="CUC-b2-dTt"/>
-                                            <exclude reference="lnB-9n-j4o"/>
                                             <exclude reference="ByQ-wO-DQR"/>
                                             <exclude reference="KFZ-Gh-fRY"/>
                                             <exclude reference="YNg-Cw-53m"/>
                                             <exclude reference="kxj-LB-zTG"/>
+                                            <exclude reference="2ah-tu-lqY"/>
+                                            <exclude reference="9Nk-wf-JxJ"/>
+                                            <exclude reference="CUC-b2-dTt"/>
+                                            <exclude reference="lnB-9n-j4o"/>
                                         </mask>
                                     </variation>
                                     <variation key="heightClass=regular-widthClass=compact">
@@ -412,6 +428,9 @@
                                             <exclude reference="x64-7o-dCI"/>
                                             <exclude reference="4eq-jS-jyS"/>
                                             <include reference="pHt-Sx-ioo"/>
+                                            <include reference="ByQ-wO-DQR"/>
+                                            <include reference="KFZ-Gh-fRY"/>
+                                            <include reference="kxj-LB-zTG"/>
                                             <exclude reference="1ch-He-Zjy"/>
                                             <exclude reference="1yv-Kz-Ezr"/>
                                             <include reference="2ah-tu-lqY"/>
@@ -423,9 +442,6 @@
                                             <exclude reference="Mcc-RT-LwD"/>
                                             <include reference="lnB-9n-j4o"/>
                                             <exclude reference="zf8-dW-s5u"/>
-                                            <include reference="ByQ-wO-DQR"/>
-                                            <include reference="KFZ-Gh-fRY"/>
-                                            <include reference="kxj-LB-zTG"/>
                                         </mask>
                                     </variation>
                                 </tableViewCellContentView>
