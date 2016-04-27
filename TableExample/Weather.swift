@@ -7,24 +7,25 @@
 //
 
 import Foundation
+import CoreData
 
-struct WeatherStructure
+class Weather:NSManagedObject
 {
-    let maxTemperature:Int
-    let minTemperature:Int
-    let temperature:Int
-    let humidity:Int
-    let precipProbability:Int
-    let summary:String
-    let pressure:Int
-    let windSpeed:Int
-    let icon:String
+    @NSManaged var maxTemperature:Int
+    @NSManaged var minTemperature:Int
+    @NSManaged var temperature:Int
+    @NSManaged var humidity:Int
+    @NSManaged var precipProbability:Int
+    @NSManaged var summary:String
+    @NSManaged var pressure:Int
+    @NSManaged var windSpeed:Int
+    @NSManaged var icon:String
     
-    init(weatherDictionary:[String:AnyObject],current:Bool)
+    func saveWithWeatherDictionary(weatherDictionary:[String:AnyObject],current:Bool, inManagedObjectContext managedObjectContext: NSManagedObjectContext!)
     {
         if(current)
         {
-            temperature=Int(5.0/9.0*(weatherDictionary["temperature"] as! Double-32))
+            self.temperature=Int(5.0/9.0*(weatherDictionary["temperature"] as! Double-32))
             maxTemperature=100;
             minTemperature=100;
         }
@@ -42,5 +43,7 @@ struct WeatherStructure
         pressure=Int(weatherDictionary["pressure"] as! Double * 0.725)
         windSpeed=weatherDictionary["windSpeed"] as! Int
         icon=weatherDictionary["icon"] as! String
+        
+        try? managedObjectContext.save()
     }
 }

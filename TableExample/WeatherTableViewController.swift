@@ -2,6 +2,7 @@
 import UIKit
 import CoreLocation
 import AddressBookUI
+import CoreData
 
 class WeatherTableViewController: UITableViewController {
     
@@ -10,10 +11,11 @@ class WeatherTableViewController: UITableViewController {
     let LabelCell="CustomCell1"
     let LabelCell2="CustomCell2"
     var cityName:String!
-    var weatherForAllDays=[WeatherStructure]()
     var coords:String!
     let calendar = NSCalendar.currentCalendar()
+    let coreDataManager=CoreDataManager()
 
+//    NSFetchedResultsController
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -21,7 +23,7 @@ class WeatherTableViewController: UITableViewController {
         let forecastURL = NSURL(string:coords, relativeToURL: baseURL)
         let weatherData = NSData(contentsOfURL: forecastURL!)
         let json=convertToJSON(weatherData!)
-        weatherForAllDays=fillWeatherData(json!)
+        fillWeatherData(json!)
     }
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int
     {
@@ -41,15 +43,15 @@ class WeatherTableViewController: UITableViewController {
             cell=tableView.dequeueReusableCellWithIdentifier(self.LabelCell, forIndexPath: indexPath)
             let cell1=cell as! CustomCell1
             tableView.rowHeight=250
-            
+
             let components = calendar.components(.Weekday, fromDate: NSDate())
             cell1.dayOfWeekLabel.text=nameOfDay(components.weekday)
-            cell1.temperatureLabel.text="\(weatherForAllDays[indexPath.row].temperature)ºC"
-            cell1.humidityLabel.text="\(weatherForAllDays[indexPath.row].humidity)%"
-            cell1.pressureLabel.text="\(weatherForAllDays[indexPath.row].pressure) mmHg"
-            cell1.summaryLabel.text="\(weatherForAllDays[indexPath.row].summary)"
-            cell1.windLabel.text="\(weatherForAllDays[indexPath.row].windSpeed) m/s"
-            cell1.icon.image=UIImage(named: weatherForAllDays[indexPath.row].icon)
+            cell1.temperatureLabel.text="\((coreDataManager.weatherArray[indexPath.row] as! Weather).temperature)ºC"
+            cell1.humidityLabel.text="\((coreDataManager.weatherArray[indexPath.row] as! Weather).humidity)%"
+            cell1.pressureLabel.text="\((coreDataManager.weatherArray[indexPath.row] as! Weather).pressure) mmHg"
+            cell1.summaryLabel.text="\((coreDataManager.weatherArray[indexPath.row] as! Weather).summary)"
+            cell1.windLabel.text="\((coreDataManager.weatherArray[indexPath.row] as! Weather).windSpeed) m/s"
+            cell1.icon.image=UIImage(named: (coreDataManager.weatherArray[indexPath.row] as! Weather).icon)
         }
         else
         {
@@ -61,11 +63,11 @@ class WeatherTableViewController: UITableViewController {
             let components=calendar.components(.Weekday,fromDate: thatDay!)
             
             cell2.dayOfWeekLabel.text=nameOfDay(components.weekday)
-            cell2.maxTempLabel.text="\(weatherForAllDays[indexPath.row].maxTemperature)ºC"
-            cell2.minTempLabel.text="\(weatherForAllDays[indexPath.row].minTemperature)ºC"
-            cell2.humidityLabel.text="\(weatherForAllDays[indexPath.row].humidity)%"
-            cell2.windLabel.text="\(weatherForAllDays[indexPath.row].windSpeed)m/s"
-            cell2.icon.image=UIImage(named: weatherForAllDays[indexPath.row].icon)
+            cell2.maxTempLabel.text="\((coreDataManager.weatherArray[indexPath.row] as! Weather).maxTemperature)ºC"
+            cell2.minTempLabel.text="\((coreDataManager.weatherArray[indexPath.row] as! Weather).minTemperature)ºC"
+            cell2.humidityLabel.text="\((coreDataManager.weatherArray[indexPath.row] as! Weather).humidity)%"
+            cell2.windLabel.text="\((coreDataManager.weatherArray[indexPath.row] as! Weather).windSpeed)m/s"
+            cell2.icon.image=UIImage(named: (coreDataManager.weatherArray[indexPath.row] as! Weather).icon)
         }
         return cell
     }
@@ -85,24 +87,36 @@ class WeatherTableViewController: UITableViewController {
         catch{}
         return nil
     }
-    func fillWeatherData(json : NSDictionary)->[WeatherStructure]
+    func fillWeatherData(json : NSDictionary)
     {
-        var weatherForAllDays=Array<WeatherStructure>()
         if let currently=json["currently"] as? NSDictionary
         {
-            weatherForAllDays.append(WeatherStructure(weatherDictionary: currently as! [String : AnyObject],current: true))
+            coreDataManager.viewWillAppear()
+            let i=coreDataManager.findIndexOfCity(self.cityName)!
+            
+            if coreDataManager.weatherArray.count>0
+            {
+                for _ in i*7...i*7+6
+                {
+                    coreDataManager.deleteWeatherOnDay(i*7)
+                }
+                coreDataManager.viewWillAppear()
+            }
+            coreDataManager.addWeatherOnDay(currently, isCurrent: true)
+            coreDataManager.viewWillAppear()
         }
         if let daily=json["daily"] as? NSDictionary
         {
             if let data=daily["data"] as? [NSDictionary]
             {
-                for index in 0...6
+                for index in 0...5
                 {
-                    weatherForAllDays.append(WeatherStructure(weatherDictionary: data[index] as! [String : AnyObject],current: false))
+                    coreDataManager.addWeatherOnDay(data[index], isCurrent: false)
+                    coreDataManager.viewWillAppear()
                 }
             }
+            print(coreDataManager.weatherArray)
         }
-        return weatherForAllDays
     }
     func nameOfDay(day:Int)->String
     {
