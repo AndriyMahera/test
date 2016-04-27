@@ -20,8 +20,9 @@ class Weather:NSManagedObject
     @NSManaged var pressure:Int
     @NSManaged var windSpeed:Int
     @NSManaged var icon:String
+    @NSManaged var indexOfCity:Int
     
-    func saveWithWeatherDictionary(weatherDictionary:[String:AnyObject],current:Bool, inManagedObjectContext managedObjectContext: NSManagedObjectContext!)
+    func saveWithWeatherDictionary(weatherDictionary:[String:AnyObject],current:Bool, index:Int,inManagedObjectContext managedObjectContext: NSManagedObjectContext!)
     {
         if(current)
         {
@@ -43,6 +44,7 @@ class Weather:NSManagedObject
         pressure=Int(weatherDictionary["pressure"] as! Double * 0.725)
         windSpeed=weatherDictionary["windSpeed"] as! Int
         icon=weatherDictionary["icon"] as! String
+        indexOfCity=index
         
         try? managedObjectContext.save()
     }

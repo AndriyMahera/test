@@ -13,25 +13,17 @@ import CoreData
 
 class CoreDataManager
 {
-    var cities = [NSManagedObject]()
-    var weatherArray = [NSManagedObject]()
+    var cities = [City]()
+    var weatherArray = [Weather]()
     
     func addCity(name:String)
     {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let entity =  NSEntityDescription.entityForName("City",inManagedObjectContext:managedContext)
-        let element = NSManagedObject(entity: entity!,insertIntoManagedObjectContext: managedContext)
-        element.setValue(name, forKey: "name")
-        do
-        {
-            try managedContext.save()
-            cities.append(element)
-        }
-        catch let error as NSError
-        {
-            print("Could not save \(error), \(error.userInfo)")
-        }
+        let city = NSManagedObject(entity: entity!,insertIntoManagedObjectContext: managedContext) as? City
+        city?.saveCity(name,id: self.findSuitableId(),inManagedObjectContext: managedContext)
+        cities.append(city!)
     }
     func deleteCity(index:Int)
     {
@@ -51,20 +43,20 @@ class CoreDataManager
         for index in 0...self.cities.count-1
         {
 
-            if self.cities[index].valueForKey("name") as? String==name
+            if self.cities[index].name==name
             {
-                return index
+                return self.cities[index].id
             }
         }
         return nil
     }
-    func addWeatherOnDay(weatherDict:NSDictionary,isCurrent:Bool)
+    func addWeatherOnDay(weatherDict:NSDictionary,isCurrent:Bool,name:String)
     {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let weatherEntity =  NSEntityDescription.entityForName("WeatherEntity",inManagedObjectContext:managedContext)
         let weather = NSManagedObject(entity: weatherEntity!,insertIntoManagedObjectContext: managedContext) as? Weather
-        weather?.saveWithWeatherDictionary(weatherDict as! [String : AnyObject], current: isCurrent, inManagedObjectContext: managedContext)
+        weather?.saveWithWeatherDictionary(weatherDict as! [String : AnyObject], current: isCurrent, index:self.findIndexOfCity(name)!,inManagedObjectContext: managedContext)
         weatherArray.append(weather!)
     }
     func deleteWeatherOnDay(index:Int)
@@ -79,6 +71,33 @@ class CoreDataManager
         }
         catch{}
     }
+    func deleteWeatherOnWeek(indexOfCity:Int)
+    {
+        if self.weatherArray.count>0
+        {
+            let weatherIDs=self.weatherArray.map{$0.indexOfCity}
+            if weatherIDs.contains(indexOfCity)
+            {
+            var amount=0
+            while(amount<7)
+            {
+                var index=0
+                if self.weatherArray[index].indexOfCity==indexOfCity
+                {
+                    self.deleteWeatherOnDay(index)
+                    index=index-1
+                    amount=amount+1
+                }
+            }
+            }
+            else
+            {
+                return
+            }
+            self.viewWillAppear()
+        }
+
+    }
 
     func viewWillAppear() {
         let appDelegate =
@@ -88,19 +107,26 @@ class CoreDataManager
         do
         {
             let results = try managedContext.executeFetchRequest(fetchRequest)
-            cities = results as! [NSManagedObject]
+            cities = results as! [City]
         }
         catch  {}
         let fetchRequest2 = NSFetchRequest(entityName: "WeatherEntity")
         do
         {
             let results = try managedContext.executeFetchRequest(fetchRequest2)
-            weatherArray = results as! [NSManagedObject]
+            weatherArray = results as! [Weather]
         }
         catch  {}
     }
-
     
-
-
+    func findSuitableId()->Int
+    {
+        let citiesIDs=self.cities.map{$0.id}
+        var i=0
+        while citiesIDs.contains(i)
+        {
+            i=i+1
+        }
+        return i
+    }
 }

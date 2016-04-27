@@ -30,7 +30,7 @@ class  CitiesTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(self.CityTableViewCellIdentifier, forIndexPath: indexPath)
         let city=self.coreDataManager.cities[indexPath.row]
-        cell.textLabel!.text = city.valueForKey("name") as? String
+        cell.textLabel!.text = (city as City).name
         return cell
     }
     
@@ -43,7 +43,7 @@ class  CitiesTableViewController: UITableViewController {
             indexPath = sender as? NSIndexPath
         {
             let city=self.coreDataManager.cities[indexPath.row]
-            controller.cityName = city.valueForKey("name") as? String
+            controller.cityName = city.name
             controller.coords=getLatLngForZip((city.valueForKey("name") as? String)!)
         }
     }
