@@ -12,7 +12,9 @@ class ApiOperations
 {
     let baseURLGoogle=NSURL(string:"https://maps.googleapis.com/maps/api/geocode/json?")
     let googleApiKey="AIzaSyC07iqLskaXEGnbXN1Oc04goTmnBhKOlck"
+    let apiKey="4e39340c48a7b3a9307503a14a16e14e"
     let coreDataManager=CoreDataManager()
+    
 
     
     func getLatLngForZip(zipCode: String)->String {
@@ -52,11 +54,14 @@ class ApiOperations
         }
         return formatted
     }
-    func convertToJSON(data:NSData)->NSDictionary?
+    func convertToJSON(coords:String)->NSDictionary?
     {
+        let baseURL = NSURL(string: "https://api.forecast.io/forecast/\(self.apiKey)/")
+        let forecastURL = NSURL(string:coords, relativeToURL: baseURL)
+        let data = NSData(contentsOfURL: forecastURL!)
         do
         {
-            let json=try NSJSONSerialization.JSONObjectWithData(data, options: []) as! NSDictionary
+            let json=try NSJSONSerialization.JSONObjectWithData(data!, options: []) as! NSDictionary
             return json
         }
         catch{}

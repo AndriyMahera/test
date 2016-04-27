@@ -43,7 +43,7 @@ class  CitiesTableViewController: UITableViewController {
         {
             let city=self.coreDataManager.cities[indexPath.row]
             controller.cityName = city.name
-            controller.coords=apiOperations.getLatLngForZip((city.valueForKey("name") as? String)!)
+            controller.coords=apiOperations.getLatLngForZip(city.name)
         }
     }
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -85,7 +85,7 @@ class  CitiesTableViewController: UITableViewController {
                                         }
                                         else
                                         {
-                                            let alert2 = UIAlertController(title: "Loozer",
+                                            let alert2 = UIAlertController(title: "Error",
                                                 message: "There is no such city!",
                                                 preferredStyle: .Alert)
                                             let cancelAction = UIAlertAction(title: "Close",

@@ -5,25 +5,24 @@ import AddressBookUI
 import CoreData
 
 class WeatherTableViewController: UITableViewController {
-    
-    
-    let apiKey="4e39340c48a7b3a9307503a14a16e14e"
+
     let LabelCell="CustomCell1"
     let LabelCell2="CustomCell2"
     var cityName:String!
     var coords:String!
     let calendar = NSCalendar.currentCalendar()
     let coreDataManager=CoreDataManager()
+    let apiOperations=ApiOperations()
+    let week=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 
 //    NSFetchedResultsController
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        let baseURL = NSURL(string: "https://api.forecast.io/forecast/\(apiKey)/")
-        let forecastURL = NSURL(string:coords, relativeToURL: baseURL)
-        let weatherData = NSData(contentsOfURL: forecastURL!)
-        let json=convertToJSON(weatherData!)
-        fillWeatherData(json!,nameOfCity: cityName)
+        let json=self.apiOperations.convertToJSON(coords)
+        self.apiOperations.fillWeatherData(json!,nameOfCity: cityName)
+        self.coreDataManager.viewWillAppear()
+    
     }
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int
     {
@@ -46,7 +45,7 @@ class WeatherTableViewController: UITableViewController {
             tableView.rowHeight=250
 
             let components = calendar.components(.Weekday, fromDate: NSDate())
-            cell1.dayOfWeekLabel.text=nameOfDay(components.weekday)
+            cell1.dayOfWeekLabel.text=week[components.weekday-1]
             cell1.temperatureLabel.text="\(currentWeather[indexPath.row].temperature)ºC"
             cell1.humidityLabel.text="\(currentWeather[indexPath.row].humidity)%"
             cell1.pressureLabel.text="\(currentWeather[indexPath.row].pressure) mmHg"
@@ -63,7 +62,7 @@ class WeatherTableViewController: UITableViewController {
             let thatDay=calendar.dateByAddingUnit(.Weekday, value: indexPath.row, toDate: NSDate(), options: [])
             let components=calendar.components(.Weekday,fromDate: thatDay!)
             
-            cell2.dayOfWeekLabel.text=nameOfDay(components.weekday)
+            cell2.dayOfWeekLabel.text=week[components.weekday-1]
             cell2.maxTempLabel.text="\(currentWeather[indexPath.row].maxTemperature)ºC"
             cell2.minTempLabel.text="\(currentWeather[indexPath.row].minTemperature)ºC"
             cell2.humidityLabel.text="\(currentWeather[indexPath.row].humidity)%"
@@ -77,54 +76,6 @@ class WeatherTableViewController: UITableViewController {
     {
         return self.cityName
     }
-    
-    func convertToJSON(data:NSData)->NSDictionary?
-    {
-        do
-        {
-            let json=try NSJSONSerialization.JSONObjectWithData(data, options: []) as! NSDictionary
-            return json
-        }
-        catch{}
-        return nil
-    }
-    func fillWeatherData(json : NSDictionary,nameOfCity:String)
-    {
-        if let currently=json["currently"] as? NSDictionary
-        {
-            coreDataManager.viewWillAppear()
-            
-            let ind=coreDataManager.findIndexOfCity(self.cityName)!
-            coreDataManager.deleteWeatherOnWeek(ind)
-            
-            coreDataManager.addWeatherOnDay(currently, isCurrent: true,name: nameOfCity)
-        }
-        if let daily=json["daily"] as? NSDictionary
-        {
-            if let data=daily["data"] as? [NSDictionary]
-            {
-                for index in 0...5
-                {
-                    coreDataManager.addWeatherOnDay(data[index], isCurrent: false,name: nameOfCity)
-                }
-            }
-            print(coreDataManager.weatherArray)
-        }
-    }
-    func nameOfDay(day:Int)->String
-    {
-        switch day {
-        case 1:return "Sunday"
-        case 2:return "Monday"
-        case 3:return "Tuesday"
-        case 4:return "Wednesday"
-        case 5:return "Thursday"
-        case 6:return "Friday"
-        case 7:return "Saturday"
-        default:return "You're such an idiot!"
-        }
-    }
-
 }
 
 
