@@ -108,6 +108,7 @@ class  CitiesTableViewController: UITableViewController {
                                             {
                                                 formatted="\(array[0]),\(array[1]),\(array[2]),\(array.last!)"
                                             }
+                                            formatted=formatted.stringByFoldingWithOptions(.DiacriticInsensitiveSearch, locale: NSLocale.currentLocale())
                                             let cNames=self.coreDataManager.cities.map{$0.name}
                                             if formatted.characters.count>0 && !cNames.contains(formatted)
                                             {

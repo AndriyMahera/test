@@ -118,9 +118,9 @@
 				844CB4FD1CD5449A004D5337 /* Controllers */,
 				84FB74131CC7581200178119 /* CustomCells */,
 				84277ED81CBEDDFB00D924C3 /* AppDelegate.swift */,
-				84277EDC1CBEDDFB00D924C3 /* Main.storyboard */,
 				84277EDF1CBEDDFB00D924C3 /* Assets.xcassets */,
 				84277EE41CBEDDFB00D924C3 /* Info.plist */,
+				84277EDC1CBEDDFB00D924C3 /* Main.storyboard */,
 				84F5CD611CCEB8FE00906D3C /* Model.xcdatamodeld */,
 			);
 			path = TableExample;
