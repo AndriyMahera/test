@@ -1,14 +1,24 @@
+//
+//  CitiesTableViewController.swift
+//  WeatherApp
+//
+//  Created by Admin on 29.04.16.
+//  Copyright © 2016 Admin. All rights reserved.
+//
+
 
 import UIKit
 import CoreData
+import SystemConfiguration
 
 class  CitiesTableViewController: UITableViewController {
-   
+    
     let ForecastDetailSegueIdentifier = "ForecastDetailSegueIdentifier"
     let CityTableViewCellIdentifier = "CityTableViewCellIdentifier"
     let coreDataManager=CoreDataManager()
     let apiOperations=ApiOperations()
-
+    let reach=Reach()
+    
     
     override func viewDidLoad()
     {
@@ -36,26 +46,34 @@ class  CitiesTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.performSegueWithIdentifier(self.ForecastDetailSegueIdentifier, sender: indexPath)
     }
-
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let controller = segue.destinationViewController as? WeatherTableViewController,
             indexPath = sender as? NSIndexPath
         {
             let city=self.coreDataManager.cities[indexPath.row]
-            controller.cityName = city.name
-            controller.coords=apiOperations.getLatLngForZip(city.name)
+            controller.cityID = city.id
+            controller.cityName=city.name
+            let status=Reach().connectionStatus()
+            switch  status
+            {
+                case .Unknown,.Offline: break
+                default: controller.coords=apiOperations.getLatLngForZip(city.name)
+                   break
+            }
         }
     }
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-               let city=self.coreDataManager.cities[indexPath.row]
-               self.coreDataManager.deleteWeatherOnWeek(self.coreDataManager.findIndexOfCity(city.name)!)
-               self.coreDataManager.deleteCity(indexPath.row)
+        if editingStyle == .Delete
+        {
+            let city=self.coreDataManager.cities[indexPath.row]
+            self.coreDataManager.deleteWeatherOnWeek(city.id)
+            self.coreDataManager.deleteCity(indexPath.row)
             
-               tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-            
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
-        else {
+        else
+        {
             return
         }
         
@@ -78,23 +96,31 @@ class  CitiesTableViewController: UITableViewController {
         let saveAction = UIAlertAction(title: "Save",
                                        style: .Default,
                                        handler: { (action:UIAlertAction) -> Void in
-                                        let formatted=self.apiOperations.getFormattedAdress((alert.textFields!.first?.text)!)
-                                        if formatted.characters.count>0
+                                        let status=Reach().connectionStatus()
+                                        switch  status
                                         {
-                                           self.coreDataManager.addCity(formatted)
-                                        }
-                                        else
-                                        {
-                                            let alert2 = UIAlertController(title: "Error",
-                                                message: "There is no such city!",
-                                                preferredStyle: .Alert)
-                                            let cancelAction = UIAlertAction(title: "Close",
-                                            style: .Default) { (action: UIAlertAction) -> Void in
+                                        case .Unknown,.Offline:self.alertAboutError("You are offline now.Please try again.")
+                                            break
+                                        default:
+                                            let formatted=self.apiOperations.getFormattedAdress((alert.textFields!.first?.text)!)
+                                            let cNames=self.coreDataManager.cities.map{$0.name}
+                                            if formatted.characters.count>0 && !cNames.contains(formatted)
+                                            {
+                                                self.coreDataManager.addCity(formatted)
                                             }
-                                            alert2.addAction(cancelAction)
-                                            self.presentViewController(alert2,animated: true,completion: nil)
+                                            else
+                                            {
+                                                if formatted.characters.count>0 && cNames.contains(formatted)
+                                                {
+                                                    self.alertAboutError("Fool,you tried to make duplicate!")
+                                                }
+                                                self.alertAboutError("There is no such city!")
+                                            }
+                                            
+                                            self.tableView.reloadData()
+                                            break
                                         }
-                                        self.tableView.reloadData()
+
         })
         
         let cancelAction = UIAlertAction(title: "Cancel",style: .Default) { (action: UIAlertAction) -> Void in
@@ -108,6 +134,18 @@ class  CitiesTableViewController: UITableViewController {
         alert.addAction(cancelAction)
         
         presentViewController(alert,animated: true,completion: nil)
+    }
+    
+    func alertAboutError(error:String)
+    {
+        let alert2 = UIAlertController(title: "Error",
+                                       message: error,
+                                       preferredStyle: .Alert)
+        let cancelAction = UIAlertAction(title: "Close",
+                                         style: .Default) { (action: UIAlertAction) -> Void in
+        }
+        alert2.addAction(cancelAction)
+        self.presentViewController(alert2,animated: true,completion: nil)
     }
 }
 

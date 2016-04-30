@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SystemConfiguration
 
 class ApiOperations
 {
@@ -67,16 +68,13 @@ class ApiOperations
         catch{}
         return nil
     }
-    func fillWeatherData(json : NSDictionary,nameOfCity:String)
+    func fillWeatherData(json : NSDictionary,idOfCity:Int)
     {
         if let currently=json["currently"] as? NSDictionary
         {
             coreDataManager.viewWillAppear()
-            
-            let ind=coreDataManager.findIndexOfCity(nameOfCity)!
-            coreDataManager.deleteWeatherOnWeek(ind)
-            
-            coreDataManager.addWeatherOnDay(currently, isCurrent: true,name: nameOfCity)
+            coreDataManager.deleteWeatherOnWeek(idOfCity)
+            coreDataManager.addWeatherOnDay(currently, isCurrent: true,id: idOfCity)
         }
         if let daily=json["daily"] as? NSDictionary
         {
@@ -84,12 +82,10 @@ class ApiOperations
             {
                 for index in 0...5
                 {
-                    coreDataManager.addWeatherOnDay(data[index], isCurrent: false,name: nameOfCity)
+                    coreDataManager.addWeatherOnDay(data[index], isCurrent: false,id: idOfCity)
                 }
             }
             print(coreDataManager.weatherArray)
         }
     }
-
-
 }

@@ -26,7 +26,7 @@
         <!--Cities Table View Controller-->
         <scene sceneID="94Z-Pj-5SZ">
             <objects>
-                <tableViewController storyboardIdentifier="1" id="0ma-v9-akh" customClass="CitiesTableViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="CitiesTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0ma-v9-akh" customClass="CitiesTableViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="KNH-2Q-PyY">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -64,7 +64,7 @@
                     <navigationItem key="navigationItem" id="i8t-Jf-2Pt">
                         <barButtonItem key="rightBarButtonItem" id="hfa-pB-fxu">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="JVw-Ca-YrU">
-                                <rect key="frame" x="491" y="9" width="89" height="25"/>
+                                <rect key="frame" x="490" y="12" width="90" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Add new city"/>
                                 <connections>
@@ -296,17 +296,6 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SRB-jU-Z3O">
-                                            <rect key="frame" x="39" y="35" width="100" height="70"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="70" id="hse-rk-JvD">
-                                                    <variation key="heightClass=regular-widthClass=compact" constant="55"/>
-                                                </constraint>
-                                                <constraint firstAttribute="width" constant="100" id="pnr-d0-Wae">
-                                                    <variation key="heightClass=regular-widthClass=compact" constant="80"/>
-                                                </constraint>
-                                            </constraints>
-                                        </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="wind" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wBG-GW-WnI">
                                             <rect key="frame" x="248" y="99" width="70" height="21"/>
                                             <constraints>
@@ -327,6 +316,17 @@
                                                 </mask>
                                             </variation>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SRB-jU-Z3O">
+                                            <rect key="frame" x="39" y="35" width="100" height="70"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="70" id="hse-rk-JvD">
+                                                    <variation key="heightClass=regular-widthClass=compact" constant="55"/>
+                                                </constraint>
+                                                <constraint firstAttribute="width" constant="100" id="pnr-d0-Wae">
+                                                    <variation key="heightClass=regular-widthClass=compact" constant="80"/>
+                                                </constraint>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="hDj-ku-Joi" firstAttribute="leading" secondItem="OBz-tB-WSp" secondAttribute="trailing" constant="32" id="1ch-He-Zjy"/>

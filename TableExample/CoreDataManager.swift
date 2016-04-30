@@ -23,15 +23,16 @@ class CoreDataManager
         let entity =  NSEntityDescription.entityForName("City",inManagedObjectContext:managedContext)
         let city = NSManagedObject(entity: entity!,insertIntoManagedObjectContext: managedContext) as? City
         city?.saveCity(name,id: self.findSuitableId(),inManagedObjectContext: managedContext)
-        cities.append(city!)
+        self.cities.append(city!)
         self.viewWillAppear()
     }
+    
     func deleteCity(index:Int)
     {
         let appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let context:NSManagedObjectContext = appDel.managedObjectContext
         context.deleteObject(cities[index])
-        cities.removeAtIndex(index)
+        self.cities.removeAtIndex(index)
         do
         {
             try context.save()
@@ -39,35 +40,24 @@ class CoreDataManager
         catch{}
         self.viewWillAppear()
     }
-    func findIndexOfCity(name:String)->Int?
-    {
-        if cities.count==0{return nil}
-        for index in 0...self.cities.count-1
-        {
-
-            if self.cities[index].name==name
-            {
-                return self.cities[index].id
-            }
-        }
-        return nil
-    }
-    func addWeatherOnDay(weatherDict:NSDictionary,isCurrent:Bool,name:String)
+    
+    func addWeatherOnDay(weatherDict:NSDictionary,isCurrent:Bool,id:Int)
     {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         let weatherEntity =  NSEntityDescription.entityForName("WeatherEntity",inManagedObjectContext:managedContext)
         let weather = NSManagedObject(entity: weatherEntity!,insertIntoManagedObjectContext: managedContext) as? Weather
-        weather?.saveWithWeatherDictionary(weatherDict as! [String : AnyObject], current: isCurrent, index:self.findIndexOfCity(name)!,inManagedObjectContext: managedContext)
-        weatherArray.append(weather!)
+        weather?.saveWithWeatherDictionary(weatherDict as! [String : AnyObject], current: isCurrent, index:id,inManagedObjectContext: managedContext)
+        self.weatherArray.append(weather!)
         self.viewWillAppear()
     }
+    
     func deleteWeatherOnDay(index:Int)
     {
         let appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let context:NSManagedObjectContext = appDel.managedObjectContext
         context.deleteObject(weatherArray[index])
-        weatherArray.removeAtIndex(index)
+        self.weatherArray.removeAtIndex(index)
         do
         {
             try context.save()
@@ -75,6 +65,7 @@ class CoreDataManager
         catch{}
         self.viewWillAppear()
     }
+    
     func deleteWeatherOnWeek(indexOfCity:Int)
     {
         if self.weatherArray.count>0
@@ -83,15 +74,16 @@ class CoreDataManager
             if weatherIDs.contains(indexOfCity)
             {
             var amount=0
+            var index=0
             while(amount<7)
             {
-                var index=0
                 if self.weatherArray[index].indexOfCity==indexOfCity
                 {
                     self.deleteWeatherOnDay(index)
                     index=index-1
                     amount=amount+1
                 }
+                index=index+1
             }
             }
             else
@@ -111,14 +103,14 @@ class CoreDataManager
         do
         {
             let results = try managedContext.executeFetchRequest(fetchRequest)
-            cities = results as! [City]
+            self.cities = results as! [City]
         }
         catch  {}
         let fetchRequest2 = NSFetchRequest(entityName: "WeatherEntity")
         do
         {
             let results = try managedContext.executeFetchRequest(fetchRequest2)
-            weatherArray = results as! [Weather]
+            self.weatherArray = results as! [Weather]
         }
         catch  {}
     }
@@ -133,13 +125,13 @@ class CoreDataManager
         }
         return i
     }
-    func getWeatherForCurrentCity(cityName:String)->[Weather]
+    
+    func getWeatherForCurrentCity(cityID:Int)->[Weather]
     {
         var currentCityWeather=[Weather]()
-        let indexOfCity=self.findIndexOfCity(cityName)
         for ind in 0...self.weatherArray.count-1
         {
-            if self.weatherArray[ind].indexOfCity==indexOfCity
+            if self.weatherArray[ind].indexOfCity==cityID
             {
                 currentCityWeather.append(self.weatherArray[ind])
             }
