@@ -46,6 +46,6 @@ class Weather:NSManagedObject
         icon=weatherDictionary["icon"] as! String
         indexOfCity=index
         
-        try? managedObjectContext.save()
+        do {try managedObjectContext.save()}catch{}
     }
 }

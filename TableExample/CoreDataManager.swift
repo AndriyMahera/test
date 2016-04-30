@@ -20,7 +20,7 @@ class CoreDataManager
     {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        let entity =  NSEntityDescription.entityForName("City",inManagedObjectContext:managedContext)
+        let entity =  NSEntityDescription.entityForName("CityEntity",inManagedObjectContext:managedContext)
         let city = NSManagedObject(entity: entity!,insertIntoManagedObjectContext: managedContext) as? City
         city?.saveCity(name,id: self.findSuitableId(),inManagedObjectContext: managedContext)
         self.cities.append(city!)
@@ -63,7 +63,6 @@ class CoreDataManager
             try context.save()
         }
         catch{}
-        self.viewWillAppear()
     }
     
     func deleteWeatherOnWeek(indexOfCity:Int)
@@ -99,7 +98,7 @@ class CoreDataManager
         let appDelegate =
             UIApplication.sharedApplication().delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        let fetchRequest = NSFetchRequest(entityName: "City")
+        let fetchRequest = NSFetchRequest(entityName: "CityEntity")
         do
         {
             let results = try managedContext.executeFetchRequest(fetchRequest)

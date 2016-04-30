@@ -80,7 +80,7 @@ class ApiOperations
         {
             if let data=daily["data"] as? [NSDictionary]
             {
-                for index in 0...5
+                for index in 1...6
                 {
                     coreDataManager.addWeatherOnDay(data[index], isCurrent: false,id: idOfCity)
                 }

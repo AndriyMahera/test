@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Xcode 7.0">
-    <entity name="City" representedClassName=".City" syncable="YES">
+    <entity name="CityEntity" representedClassName=".City" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -17,7 +17,7 @@
         <attribute name="windSpeed" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
-        <element name="City" positionX="-45" positionY="0" width="128" height="75"/>
+        <element name="CityEntity" positionX="-45" positionY="0" width="128" height="75"/>
         <element name="WeatherEntity" positionX="-45" positionY="9" width="128" height="195"/>
     </elements>
 </model>

@@ -17,12 +17,13 @@ class WeatherTableViewController: UITableViewController {
     let coreDataManager=CoreDataManager()
     let apiOperations=ApiOperations()
     let week=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-    var isEmpty=false
 
-//    NSFetchedResultsController
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        let imageView=UIImageView(image: UIImage(named: "background"))
+        imageView.contentMode = .ScaleAspectFill
+        self.tableView.backgroundView=imageView
         self.coreDataManager.viewWillAppear()
         let status=Reach().connectionStatus()
         switch  status
@@ -31,20 +32,21 @@ class WeatherTableViewController: UITableViewController {
             let weatherIDs=self.coreDataManager.weatherArray.map{$0.indexOfCity}
             if !weatherIDs.contains(self.cityID)
             {
-                self.isEmpty=true
-                navigationController?.popViewControllerAnimated(true)            }
-            else{self.isEmpty=false}
+                navigationController?.popViewControllerAnimated(true)
+            }
             break
-        default: let json=self.apiOperations.convertToJSON(coords)
-        self.apiOperations.fillWeatherData(json!,idOfCity: self.cityID)
+        default:
+            let json=self.apiOperations.convertToJSON(coords)
+            self.apiOperations.fillWeatherData(json!,idOfCity: self.cityID)
             break
         }
     }
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath)
     {
-        return 1
+        cell.backgroundColor = .clearColor()
     }
-
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return 7
@@ -52,6 +54,7 @@ class WeatherTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
+        self.coreDataManager.viewWillAppear()
         let currentWeather=coreDataManager.getWeatherForCurrentCity(self.cityID)
         var cell:UITableViewCell
         if(indexPath.row==0)
@@ -60,9 +63,9 @@ class WeatherTableViewController: UITableViewController {
             let cell1=cell as! CustomCell1
             tableView.rowHeight=250
             
-            if !isEmpty
+            if currentWeather.count>0
             {
-               let components = calendar.components(.Weekday, fromDate: NSDate())
+               let components = self.calendar.components(.Weekday, fromDate: NSDate())
                cell1.dayOfWeekLabel.text=week[components.weekday-1]
                cell1.temperatureLabel.text="\(currentWeather[indexPath.row].temperature)ºC"
                cell1.humidityLabel.text="\(currentWeather[indexPath.row].humidity)%"
@@ -78,10 +81,10 @@ class WeatherTableViewController: UITableViewController {
             let cell2=cell as! CustomCell2
             tableView.rowHeight=140
             
-            if !isEmpty
+            if currentWeather.count>0
             {
-               let thatDay=calendar.dateByAddingUnit(.Weekday, value: indexPath.row, toDate: NSDate(), options: [])
-               let components=calendar.components(.Weekday,fromDate: thatDay!)
+               let thatDay=self.calendar.dateByAddingUnit(.Weekday, value: indexPath.row, toDate: NSDate(), options: [])
+               let components=self.calendar.components(.Weekday,fromDate: thatDay!)
             
                cell2.dayOfWeekLabel.text=week[components.weekday-1]
                cell2.maxTempLabel.text="\(currentWeather[indexPath.row].maxTemperature)ºC"
@@ -90,7 +93,6 @@ class WeatherTableViewController: UITableViewController {
                cell2.windLabel.text="\(currentWeather[indexPath.row].windSpeed)m/s"
                cell2.icon.image=UIImage(named: currentWeather[indexPath.row].icon)
             }
-            
         }
         return cell
     }
@@ -99,6 +101,6 @@ class WeatherTableViewController: UITableViewController {
     {
         return self.cityName
     }
-    }
+}
 
 

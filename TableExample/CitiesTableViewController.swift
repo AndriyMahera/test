@@ -23,15 +23,15 @@ class  CitiesTableViewController: UITableViewController {
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        let imageView=UIImageView(image: UIImage(named: "background"))
+        imageView.contentMode = .ScaleAspectFill
+        self.tableView.backgroundView=imageView
         navigationItem.leftBarButtonItem = editButtonItem()
         self.tableView.tableFooterView = UIView()
     }
-    
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int
-    {
-        return 1
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        cell.backgroundColor = .clearColor()
     }
-    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.coreDataManager.cities.count
     }
@@ -102,7 +102,12 @@ class  CitiesTableViewController: UITableViewController {
                                         case .Unknown,.Offline:self.alertAboutError("You are offline now.Please try again.")
                                             break
                                         default:
-                                            let formatted=self.apiOperations.getFormattedAdress((alert.textFields!.first?.text)!)
+                                            var formatted=self.apiOperations.getFormattedAdress((alert.textFields!.first?.text)!)
+                                            let array=formatted.componentsSeparatedByString(",")
+                                            if array.count>3
+                                            {
+                                                formatted="\(array[0]),\(array[1]),\(array[2]),\(array.last!)"
+                                            }
                                             let cNames=self.coreDataManager.cities.map{$0.name}
                                             if formatted.characters.count>0 && !cNames.contains(formatted)
                                             {
@@ -114,7 +119,7 @@ class  CitiesTableViewController: UITableViewController {
                                                 {
                                                     self.alertAboutError("Fool,you tried to make duplicate!")
                                                 }
-                                                self.alertAboutError("There is no such city!")
+                                                self.alertAboutError("There is no such city,country etc!")
                                             }
                                             
                                             self.tableView.reloadData()
