@@ -11,6 +11,7 @@ import UIKit
 class CustomCell2: UITableViewCell {
 
 
+
     @IBOutlet weak var icon: UIImageView!
     @IBOutlet weak var dayOfWeekLabel: UILabel!
 
